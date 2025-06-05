@@ -60,7 +60,7 @@ contract('ETHTornado', (accounts) => {
   const value = ETH_AMOUNT || '1000000000000000000' // 1 ether
   let snapshotId
   let tree
-  const fee = bigInt(ETH_AMOUNT).shr(1) || bigInt(1e17)
+  const fee = bigInt(ETH_AMOUNT ? ETH_AMOUNT : '1000000000000000000').shr(1)
   const refund = bigInt(0)
   const recipient = getRandomRecipient()
   const relayer = accounts[1]
@@ -106,6 +106,13 @@ contract('ETHTornado', (accounts) => {
       await tornado.deposit(commitment, { value, from: sender }).should.be.fulfilled
       const error = await tornado.deposit(commitment, { value, from: sender }).should.be.rejected
       error.reason.should.be.equal('The commitment has been submitted')
+    })
+
+    it('should reject incorrect deposit amount', async () => {
+      const commitment = toFixedHex(77)
+      const wrongValue = toBN(value).add(toBN(1))
+      const error = await tornado.deposit(commitment, { value: wrongValue, from: sender }).should.be.rejected
+      error.reason.should.be.equal('Please send `denomination` ETH along with transaction')
     })
   })
 
