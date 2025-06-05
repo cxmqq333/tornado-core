@@ -50,7 +50,7 @@ contract('ERC20Tornado', (accounts) => {
   let tokenDenomination = TOKEN_AMOUNT || '1000000000000000000' // 1 ether
   let snapshotId
   let tree
-  const fee = bigInt(ETH_AMOUNT).shr(1) || bigInt(1e17)
+  const fee = bigInt(ETH_AMOUNT ? ETH_AMOUNT : '1000000000000000000').shr(1)
   const refund = ETH_AMOUNT || '1000000000000000000' // 1 ether
   let recipient = getRandomRecipient()
   const relayer = accounts[1]

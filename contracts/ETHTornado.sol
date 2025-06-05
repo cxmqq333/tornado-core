@@ -23,7 +23,7 @@ contract ETHTornado is Tornado {
   ) Tornado(_verifier, _hasher, _denomination, _merkleTreeHeight) {}
 
   function _processDeposit() internal override {
-    require(msg.value == denomination, "Please send `mixDenomination` ETH along with transaction");
+    require(msg.value == denomination, "Please send `denomination` ETH along with transaction");
   }
 
   function _processWithdraw(
@@ -37,10 +37,10 @@ contract ETHTornado is Tornado {
     require(_refund == 0, "Refund value is supposed to be zero for ETH instance");
 
     (bool success, ) = _recipient.call{ value: denomination - _fee }("");
-    require(success, "payment to _recipient did not go thru");
+    require(success, "payment to _recipient did not go through");
     if (_fee > 0) {
       (success, ) = _relayer.call{ value: _fee }("");
-      require(success, "payment to _relayer did not go thru");
+      require(success, "payment to _relayer did not go through");
     }
   }
 }
